@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 export (int) var WALK_SPEED = 96
-var animationSpeed = 1.5
+var animationSpeed = 1.4
 
 var walkVel = Vector2()
 
@@ -62,6 +62,7 @@ func _on_DamageTimer_timeout():
     
 func damagePlayer():
     health -= 1
+    print("Player hurt")
     if(health <= 0):
         find_node("DamageTimer").stop()
-        #TODO game over
+        print("Game over")

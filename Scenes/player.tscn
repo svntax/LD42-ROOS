@@ -28,7 +28,7 @@ _sections_unfolded = [ "Resource" ]
 [sub_resource type="Animation" id=4]
 
 resource_name = "movingAnim"
-length = 0.5
+length = 0.4
 loop = true
 step = 0.1
 tracks/0/type = "value"
