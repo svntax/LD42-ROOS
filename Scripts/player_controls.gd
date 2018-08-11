@@ -12,7 +12,10 @@ var animationPlayer
 var health
 var numEnemies
 
+var arena
+
 func _ready():
+    arena = get_tree().get_nodes_in_group("arenas")[0]
     movingSprite = find_node("AnimatedSprite")
     playerCamera = find_node("PlayerCamera")
     animationPlayer = find_node("AnimationPlayer")
@@ -20,7 +23,13 @@ func _ready():
     numEnemies = 0
 
 func _process(delta):
-    pass
+    if(Input.is_action_pressed("PLACE_SLIME")):
+        if(arena != null):
+            var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
+            var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
+            arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
+        else:
+            print("ERROR: arena node not found")
 
 func _physics_process(delta):
     walkVel.x = 0
