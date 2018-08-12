@@ -45,13 +45,42 @@ func placeSlimeAt(pos, type):
 
     #If the actual tile object already exists, just change its sprite
     #Else instantiate a new tile object
-    if(tileObjectGrid[cellX][cellY] != null):
+    var tileObject = tileObjectGrid[cellX][cellY]
+    if(tileObject != null):
         if(type == Globals.PLAYER_SLIME):
-            tileObjectGrid[cellX][cellY].find_node("PlayerSlime").show()
+            tileObject.showPlayerSlime()
+        elif(type == Globals.RED_SLIME):
+            tileObject.showRedSlime()
     else:
         var tempTile = groundTile.instance()
         tempTile.translate(pos + Vector2(16, 16))
         tempTile.set_scale(Vector2(2, 2))
         if(type == Globals.PLAYER_SLIME):
-            tempTile.find_node("PlayerSlime").show()
+            tempTile.showPlayerSlime()
+        elif(type == Globals.RED_SLIME):
+            tempTile.showRedSlime()
         add_child(tempTile)
+
+func meltPlayerTiles(cellPos, delay):
+    if(cellPos.x <= 0 or cellPos.x >= gridWidth - 1 or cellPos.y <= 0 or cellPos.y >= gridHeight - 1):
+        return
+    var tileStatus = grid[cellPos.x][cellPos.y]
+    if(tileStatus == Globals.EMPTY_CELL and tileMap.get_cell(cellPos.x, cellPos.y) == 0):
+        var tileObject = tileObjectGrid[cellPos.x][cellPos.y]
+        if(tileObject == null):
+            tileObject = groundTile.instance()
+            tileObject.translate((cellPos * Globals.TILE_SIZE) + Vector2(16, 16))
+            tileObject.set_scale(Vector2(2, 2))
+            add_child(tileObject)
+            tileObjectGrid[cellPos.x][cellPos.y] = tileObject
+            if(tileMap.get_cell(cellPos.x, cellPos.y) == 0):
+                tileMap.set_cell(cellPos.x, cellPos.y, -1)
+        if(not tileObject.isMelting()):
+            tileObject.startMelting(delay, cellPos)
+            delay += 1
+
+func meltTileAt(cellPos):
+    if(cellPos.x <= 0 or cellPos.x >= gridWidth - 1 or cellPos.y <= 0 or cellPos.y >= gridHeight - 1):
+        return
+    if(tileMap.get_cell(cellPos.x, cellPos.y) <= 0):
+        tileMap.set_cell(cellPos.x, cellPos.y, 3)
