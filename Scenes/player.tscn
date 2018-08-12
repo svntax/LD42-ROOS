@@ -75,7 +75,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 1 ]
 }
 
-[node name="PlayerRoot" type="Node2D" index="0" groups=[
+[node name="PlayerRoot" type="Node2D" groups=[
 "players",
 ]]
 
