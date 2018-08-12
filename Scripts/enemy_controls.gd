@@ -35,4 +35,6 @@ func _physics_process(delta):
     else:
         animationPlayer.stop(true)
         movingSprite.set_frame(0)
-    
+
+func killSlime():
+    self.queue_free()

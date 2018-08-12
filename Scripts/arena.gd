@@ -26,8 +26,9 @@ func _ready():
         tileObjectGrid[x] = []
         for y in range(gridHeight):
             tileObjectGrid[x].append([])
-            if(x <= 2 or x >= gridWidth - 3 or y <= 2 or y >= gridHeight - 3):
+            if(x <= 1 or x >= gridWidth - 2 or y <= 2 or y >= gridHeight - 3):
                 tileObjectGrid[x][y] = null
+                grid[x][y] = Globals.VOID_CELL
             else:
                 var tempTile = groundTile.instance()
                 tempTile.translate(Vector2(x, y) * Globals.TILE_SIZE + Vector2(16, 16))
@@ -38,7 +39,7 @@ func _ready():
             
 
 func checkValidSlimeType(type):
-    return type == Globals.EMPTY_CELL or type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
+    return type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
 
 func placeSlimeAt(pos, type):
     if(not checkValidSlimeType(type)):
@@ -49,6 +50,8 @@ func placeSlimeAt(pos, type):
     var cellX = floor(pos.x / Globals.TILE_SIZE)
     var cellY = floor(pos.y / Globals.TILE_SIZE)
     if(grid[cellX][cellY] == type): #Do nothing if same slime already exists
+        return
+    if(grid[cellX][cellY] == Globals.VOID_CELL):
         return
     grid[cellX][cellY] = type
 

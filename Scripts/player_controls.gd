@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 export (int) var WALK_SPEED = 96
 
+var slimeball = load("res://Scenes/slimeball.tscn")
+
 var animationSpeed = 1.4
 var fallingAnimationSpeed = 0.3
 var meltSpeed = 0.4
@@ -55,6 +57,17 @@ func _process(delta):
             tileObject.shootPlayerSlime(Vector2(cellX, cellY), self.directionFacing, slimeLineLength)
         else:
             print("ERROR: arena node not found")
+    if(not falling and Input.is_action_just_pressed("THROW_SLIMEBALL")):
+        if(arena != null):
+            var targetPos = get_global_mouse_position()
+            var targetDir = targetPos - self.global_position
+            var sb = slimeball.instance()
+            get_parent().add_child(sb)
+            sb.translate(self.position)
+            sb.set_scale(Vector2(1.5, 1.5))
+            sb.throwSlimeball(targetDir)
+        else:
+            print("ERROR: arena node not found")
 
 func _physics_process(delta):
     walkVel.x = 0
@@ -106,11 +119,12 @@ func damagePlayer():
     print("Player hurt")
     if(health <= 0):
         find_node("DamageTimer").stop()
-        print("Game over")
+        self.killPlayer()
 
+func killPlayer(): #TODO
+    self.hide()
+    print("Game over")
 
 func _on_AnimationPlayer_animation_finished(anim_name):
     if(anim_name == "fallingAnim"):
-        self.hide()
-        #TODO game over
-        print("Game over")
+        self.killPlayer()
