@@ -26,7 +26,16 @@ func _ready():
         tileObjectGrid[x] = []
         for y in range(gridHeight):
             tileObjectGrid[x].append([])
-            tileObjectGrid[x][y] = null
+            if(x <= 2 or x >= gridWidth - 3 or y <= 2 or y >= gridHeight - 3):
+                tileObjectGrid[x][y] = null
+            else:
+                var tempTile = groundTile.instance()
+                tempTile.translate(Vector2(x, y) * Globals.TILE_SIZE + Vector2(16, 16))
+                tempTile.set_scale(Vector2(2, 2))
+                add_child(tempTile)
+                tileObjectGrid[x][y] = tempTile
+            #tileObjectGrid[x][y] = null
+            
 
 func checkValidSlimeType(type):
     return type == Globals.EMPTY_CELL or type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
@@ -60,12 +69,14 @@ func placeSlimeAt(pos, type):
         elif(type == Globals.RED_SLIME):
             tempTile.showRedSlime()
         add_child(tempTile)
+        tileObjectGrid[cellX][cellY] = tileObject
 
 func meltPlayerTiles(cellPos, delay):
     if(cellPos.x <= 0 or cellPos.x >= gridWidth - 1 or cellPos.y <= 0 or cellPos.y >= gridHeight - 1):
         return
     var tileStatus = grid[cellPos.x][cellPos.y]
-    if(tileStatus == Globals.EMPTY_CELL and tileMap.get_cell(cellPos.x, cellPos.y) == 0):
+    var tileIndex = tileMap.get_cell(cellPos.x, cellPos.y)
+    if(tileStatus == Globals.EMPTY_CELL and tileIndex == 0):
         var tileObject = tileObjectGrid[cellPos.x][cellPos.y]
         if(tileObject == null):
             tileObject = groundTile.instance()
@@ -84,3 +95,11 @@ func meltTileAt(cellPos):
         return
     if(tileMap.get_cell(cellPos.x, cellPos.y) <= 0):
         tileMap.set_cell(cellPos.x, cellPos.y, 3)
+
+func addTileObjectAt(cellPos):
+    var tileObject = groundTile.instance()
+    tileObject.translate((cellPos * Globals.TILE_SIZE) + Vector2(16, 16))
+    tileObject.set_scale(Vector2(2, 2))
+    add_child(tileObject)
+    tileObjectGrid[cellPos.x][cellPos.y] = tileObject
+    return tileObject

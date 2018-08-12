@@ -4,6 +4,11 @@ var melting
 var bfsSource
 var initialDelay
 
+#Variables for slime line shoot attack
+var lineSource
+var lineDirection
+var lineAmount
+
 var arena
 
 func _ready():
@@ -11,6 +16,9 @@ func _ready():
     melting = false
     bfsSource = null
     initialDelay = -1
+    lineSource = null
+    lineDirection = null
+    lineAmount = -1
 
 func showPlayerSlime():
     get_node("PlayerSlime").show()
@@ -40,3 +48,24 @@ func _on_AnimationPlayer_animation_finished(anim_name):
     arena.meltPlayerTiles(bfsSource + Vector2(1, 0), initialDelay)
     arena.meltPlayerTiles(bfsSource + Vector2(-1, 0), initialDelay)
     self.hide()
+
+func shootPlayerSlime(cellPos, direction, amount):
+    if(amount <= 0):
+        return
+    lineSource = cellPos
+    lineDirection = direction
+    lineAmount = amount
+    arena.placeSlimeAt(cellPos * Globals.TILE_SIZE, Globals.PLAYER_SLIME)
+    showPlayerSlime()
+    find_node("SlimeLineTimer").start()
+
+func _on_SlimeLineTimer_timeout():
+    var cellPos = lineSource + lineDirection
+    if(cellPos.x <= 0 or cellPos.x >= arena.gridWidth - 1 or cellPos.y <= 0 or cellPos.y >= arena.gridHeight - 1):
+        return
+    var tileIndex = arena.tileMap.get_cell(cellPos.x, cellPos.y)
+    if(tileIndex == 0):
+        var tileObject = arena.tileObjectGrid[cellPos.x][cellPos.y]
+        if(tileObject == null):
+            tileObject = arena.addTileObjectAt(cellPos)
+        tileObject.shootPlayerSlime(cellPos, lineDirection, lineAmount - 1)

@@ -79,6 +79,9 @@ tracks/0/keys = {
 "players",
 ]]
 
+z_index = 2
+_sections_unfolded = [ "Z Index" ]
+
 [node name="PlayerKinematicBody" type="KinematicBody2D" parent="." index="0"]
 
 input_pickable = false
@@ -91,6 +94,7 @@ WALK_SPEED = 96
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerKinematicBody" index="0"]
 
+position = Vector2( 0, 2 )
 shape = SubResource( 1 )
 
 [node name="PlayerCamera" type="Camera2D" parent="PlayerKinematicBody" index="1"]
@@ -121,6 +125,7 @@ _sections_unfolded = [ "Limit" ]
 
 [node name="PlayerHitbox" type="Area2D" parent="PlayerKinematicBody" index="2"]
 
+position = Vector2( 0, 2 )
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0

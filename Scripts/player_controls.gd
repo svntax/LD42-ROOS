@@ -1,8 +1,11 @@
 extends KinematicBody2D
 
 export (int) var WALK_SPEED = 96
+
 var animationSpeed = 1.4
 var fallingAnimationSpeed = 0.3
+var meltSpeed = 0.4
+var slimeLineLength = 5
 
 var walkVel = Vector2()
 
@@ -13,6 +16,7 @@ var animationPlayer
 var health
 var numEnemies
 var falling
+var directionFacing
 
 var arena
 
@@ -24,6 +28,7 @@ func _ready():
     health = 8
     numEnemies = 0
     falling = false
+    directionFacing = Vector2(1, 0)
 
 func _process(delta):
     if(not falling and Input.is_action_pressed("PLACE_SLIME")):
@@ -33,20 +38,27 @@ func _process(delta):
             arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
         else:
             print("ERROR: arena node not found")
-    if(not falling and Input.is_action_pressed("MELT_TILE")):
+    if(not falling and Input.is_action_just_pressed("MELT_TILE")):
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
-            arena.meltPlayerTiles(Vector2(cellX, cellY), 1)
+            arena.meltPlayerTiles(Vector2(cellX, cellY), meltSpeed)
+        else:
+            print("ERROR: arena node not found")
+    if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")):
+        if(arena != null):
+            var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
+            var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
+            var tileObject = arena.tileObjectGrid[cellX][cellY]
+            if(tileObject == null):
+                tileObject = arena.addTileObjectAt(Vector2(cellX, cellY))
+            tileObject.shootPlayerSlime(Vector2(cellX, cellY), self.directionFacing, slimeLineLength)
         else:
             print("ERROR: arena node not found")
 
 func _physics_process(delta):
-    if(not falling):
-        walkVel.x = 0
-        walkVel.y = 0
-    else:
-        pass
+    walkVel.x = 0
+    walkVel.y = 0
     if(not falling):
         if(Input.is_action_pressed("MOVE_LEFT")):
             walkVel.x = -WALK_SPEED
@@ -57,14 +69,13 @@ func _physics_process(delta):
         if(Input.is_action_pressed("MOVE_DOWN")):
             walkVel.y = WALK_SPEED
         if(walkVel.x != 0 or walkVel.y != 0):
+            self.directionFacing = Vector2(sign(walkVel.x), sign(walkVel.y))
             if(not animationPlayer.is_playing()):
                 animationPlayer.play("movingAnim", 1, animationSpeed, false)
         else:
             animationPlayer.stop()
             movingSprite.set_frame(0)
         self.move_and_slide(walkVel)
-    else:
-        self.move_and_collide(walkVel)
 
 func fallIntoTheVoid():
     self.falling = true
