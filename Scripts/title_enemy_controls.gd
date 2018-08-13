@@ -1,49 +1,49 @@
 extends KinematicBody2D
 
-var playerRootNode
-
-var AGGRO_RANGE = 256
 var moveSpeed = 32
 var animationSpeed = 1
 
 var animationPlayer
 var movingSprite
 var spawningTransition
+var nextTargetPos
 
-var arena
+var titleArena
 
 func _ready():
-    arena = get_tree().get_nodes_in_group("arenas")[0]
-    playerRootNode = get_tree().get_nodes_in_group("players")[0]
+    titleArena = get_parent().get_parent().find_node("TitleArena")
     animationPlayer = find_node("AnimationPlayer")
     movingSprite = find_node("AnimatedSprite")
-    animationPlayer.play("spawnAnim", 1, 0.75, false)
-    spawningTransition = true
+    spawningTransition = false
+    #animationPlayer.play("spawnAnim", 1, 0.75, false)
+    findNextTargetPos()
+    find_node("MoveTimer").start()
 
 func _process(delta):
     pass
 
 func _physics_process(delta):
     if(not spawningTransition):
-        var playerPos = playerRootNode.find_node("PlayerKinematicBody").global_position
         var myPos = self.global_position
-        var dist = playerPos - myPos
-        if dist.length() < AGGRO_RANGE:
+        var dist = nextTargetPos - myPos
+        if dist.length() > 16:
             self.move_and_slide(dist.normalized() * 32)
             if(not animationPlayer.is_playing()):
                 animationPlayer.play("movingAnim", 1, animationSpeed, false)
-            
-            var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
-            var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
-            arena.placeSlimeAt(Vector2(cx, cy), Globals.RED_SLIME)
+            var cx = floor(self.global_position.x / 48) * (48)
+            var cy = floor(self.global_position.y / 48) * (48)
+            titleArena.placeRedSlimeAt(Vector2(cx, cy), self.global_position)
         else:
             animationPlayer.stop(true)
             movingSprite.set_frame(0)
-
-func killSlime():
-    get_parent().queue_free()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
     if(anim_name == "spawnAnim"):
         spawningTransition = false
         SoundHandler.splashSound02.play()
+
+func findNextTargetPos():
+    nextTargetPos = self.global_position + Vector2(randi() % 128 - 64, randi() % 128 - 64)
+
+func _on_MoveTimer_timeout():
+    findNextTargetPos()

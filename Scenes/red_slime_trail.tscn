@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Sprites/red_slime_trail01.png" type="Texture" id=1]
+
+[node name="RedSlimeTrail" type="Sprite" index="0"]
+
+modulate = Color( 1, 1, 1, 0.517647 )
+texture = ExtResource( 1 )
+_sections_unfolded = [ "Visibility" ]
+
+

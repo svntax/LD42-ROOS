@@ -1,0 +1,153 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Scripts/title_enemy_controls.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/red_slime01.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/red_slime02.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/red_slime03.png" type="Texture" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+
+custom_solver_bias = 0.0
+radius = 18.0
+
+[sub_resource type="SpriteFrames" id=2]
+
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=3]
+
+resource_name = "movingAnim"
+length = 0.4
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 1 ]
+}
+
+[sub_resource type="Animation" id=4]
+
+resource_name = "spawnAnim"
+length = 0.4
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -64 ), Vector2( 0, -48 ), Vector2( 0, -32 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 5, 5 ), Vector2( 4, 4 ), Vector2( 3, 3 ), Vector2( 2, 2 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:collision_layer")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 9 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:collision_mask")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 3 ]
+}
+
+[node name="EnemyRoot" type="Node2D"]
+
+z_index = 2
+_sections_unfolded = [ "Z Index" ]
+
+[node name="EnemyKinematicBody" type="KinematicBody2D" parent="." index="0" groups=[
+"enemies",
+]]
+
+input_pickable = false
+collision_layer = 9
+collision_mask = 3
+collision/safe_margin = 0.08
+script = ExtResource( 1 )
+_sections_unfolded = [ "Angular", "Collision", "Linear" ]
+
+[node name="Shadow" type="Sprite" parent="EnemyKinematicBody" index="0"]
+
+modulate = Color( 0, 0, 0, 0.25098 )
+position = Vector2( 0, 9 )
+scale = Vector2( 2.2, 1 )
+texture = ExtResource( 2 )
+_sections_unfolded = [ "Material", "Transform", "Visibility" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyKinematicBody" index="1"]
+
+shape = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="EnemyKinematicBody" index="2"]
+
+scale = Vector2( 2, 2 )
+frames = SubResource( 2 )
+animation = "default"
+_sections_unfolded = [ "Transform" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="EnemyKinematicBody" index="3"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/movingAnim = SubResource( 3 )
+anims/spawnAnim = SubResource( 4 )
+blend_times = [  ]
+
+[node name="MoveTimer" type="Timer" parent="EnemyKinematicBody" index="4"]
+
+process_mode = 1
+wait_time = 3.0
+one_shot = false
+autostart = false
+
+[connection signal="animation_finished" from="EnemyKinematicBody/AnimationPlayer" to="EnemyKinematicBody" method="_on_AnimationPlayer_animation_finished"]
+
+[connection signal="timeout" from="EnemyKinematicBody/MoveTimer" to="EnemyKinematicBody" method="_on_MoveTimer_timeout"]
+
+
