@@ -84,7 +84,7 @@ tracks/1/keys = {
 custom_solver_bias = 0.0
 radius = 1.0
 
-[node name="Slimeball" type="KinematicBody2D" index="0"]
+[node name="Slimeball" type="KinematicBody2D"]
 
 input_pickable = false
 collision_layer = 1024
@@ -121,7 +121,7 @@ texture = ExtResource( 2 )
 normal_map = null
 h_frames = 1
 v_frames = 1
-_sections_unfolded = [ "Drawing", "Process Material", "Textures", "Time", "Z Index" ]
+_sections_unfolded = [ "Drawing", "Process Material", "Textures", "Time" ]
 
 [node name="SlimeHitbox" type="Area2D" parent="." index="1"]
 

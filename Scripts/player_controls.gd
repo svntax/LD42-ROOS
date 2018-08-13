@@ -8,6 +8,7 @@ var animationSpeed = 1.4
 var fallingAnimationSpeed = 0.3
 var meltSpeed = 0.4
 var slimeLineLength = 5
+var dashSpeed = 300
 
 var walkVel = Vector2()
 
@@ -18,6 +19,7 @@ var animationPlayer
 var health
 var numEnemies
 var falling
+var dashing
 var directionFacing
 
 var arena
@@ -30,6 +32,7 @@ func _ready():
     health = 8
     numEnemies = 0
     falling = false
+    dashing = false
     directionFacing = Vector2(1, 0)
 
 func _process(delta):
@@ -38,15 +41,11 @@ func _process(delta):
             var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
             var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
             arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
-        else:
-            print("ERROR: arena node not found")
     if(not falling and Input.is_action_just_pressed("MELT_TILE")):
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
             arena.meltPlayerTiles(Vector2(cellX, cellY), meltSpeed)
-        else:
-            print("ERROR: arena node not found")
     if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")):
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
@@ -55,8 +54,6 @@ func _process(delta):
             if(tileObject == null):
                 tileObject = arena.addTileObjectAt(Vector2(cellX, cellY))
             tileObject.shootPlayerSlime(Vector2(cellX, cellY), self.directionFacing, slimeLineLength)
-        else:
-            print("ERROR: arena node not found")
     if(not falling and Input.is_action_just_pressed("THROW_SLIMEBALL")):
         if(arena != null):
             var targetPos = get_global_mouse_position()
@@ -66,29 +63,38 @@ func _process(delta):
             sb.translate(self.position)
             sb.set_scale(Vector2(1.5, 1.5))
             sb.throwSlimeball(targetDir)
-        else:
-            print("ERROR: arena node not found")
+    if(not falling and not dashing and Input.is_action_just_pressed("DASH")):
+        dashing = true
+        self.set_collision_layer_bit(0, false)
+        find_node("PlayerHitbox").set_collision_layer_bit(0, false)
+        get_parent().find_node("DashTimer").start()
 
 func _physics_process(delta):
     walkVel.x = 0
     walkVel.y = 0
     if(not falling):
-        if(Input.is_action_pressed("MOVE_LEFT")):
-            walkVel.x = -WALK_SPEED
-        if(Input.is_action_pressed("MOVE_RIGHT")):
-            walkVel.x = WALK_SPEED
-        if(Input.is_action_pressed("MOVE_UP")):
-            walkVel.y = -WALK_SPEED
-        if(Input.is_action_pressed("MOVE_DOWN")):
-            walkVel.y = WALK_SPEED
-        if(walkVel.x != 0 or walkVel.y != 0):
-            self.directionFacing = Vector2(sign(walkVel.x), sign(walkVel.y))
-            if(not animationPlayer.is_playing()):
-                animationPlayer.play("movingAnim", 1, animationSpeed, false)
+        if(dashing):
+            self.move_and_slide(directionFacing.normalized() * dashSpeed)
+            var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
+            var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
+            arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
         else:
-            animationPlayer.stop()
-            movingSprite.set_frame(0)
-        self.move_and_slide(walkVel)
+            if(Input.is_action_pressed("MOVE_LEFT")):
+                walkVel.x = -WALK_SPEED
+            if(Input.is_action_pressed("MOVE_RIGHT")):
+                walkVel.x = WALK_SPEED
+            if(Input.is_action_pressed("MOVE_UP")):
+                walkVel.y = -WALK_SPEED
+            if(Input.is_action_pressed("MOVE_DOWN")):
+                walkVel.y = WALK_SPEED
+            if(walkVel.x != 0 or walkVel.y != 0):
+                self.directionFacing = Vector2(sign(walkVel.x), sign(walkVel.y))
+                if(not animationPlayer.is_playing()):
+                    animationPlayer.play("movingAnim", 1, animationSpeed, false)
+            else:
+                animationPlayer.stop()
+                movingSprite.set_frame(0)
+            self.move_and_slide(walkVel)
 
 func fallIntoTheVoid():
     self.falling = true
@@ -128,3 +134,8 @@ func killPlayer(): #TODO
 func _on_AnimationPlayer_animation_finished(anim_name):
     if(anim_name == "fallingAnim"):
         self.killPlayer()
+
+func _on_DashTimer_timeout():
+    dashing = false
+    self.set_collision_layer_bit(0, true)
+    find_node("PlayerHitbox").set_collision_layer_bit(0, true)

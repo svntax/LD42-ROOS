@@ -25,7 +25,7 @@ animations = [ {
 } ]
 _sections_unfolded = [ "Resource" ]
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 
 resource_name = "fallingAnim"
 length = 0.3
@@ -56,9 +56,8 @@ tracks/1/keys = {
 "values": [ 0.0, 45.0, 90.0, 135.0 ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=5]
 
-resource_name = "movingAnim"
 length = 0.4
 loop = true
 step = 0.1
@@ -75,7 +74,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 1 ]
 }
 
-[node name="PlayerRoot" type="Node2D" groups=[
+[node name="PlayerRoot" type="Node2D" index="0" groups=[
 "players",
 ]]
 
@@ -85,8 +84,8 @@ _sections_unfolded = [ "Z Index" ]
 [node name="PlayerKinematicBody" type="KinematicBody2D" parent="." index="0"]
 
 input_pickable = false
-collision_layer = 1
-collision_mask = 4
+collision_layer = 17
+collision_mask = 20
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
 _sections_unfolded = [ "Angular", "Collision", "Linear", "collision" ]
@@ -161,9 +160,16 @@ autoplay = ""
 playback_process_mode = 1
 playback_default_blend_time = 0.0
 playback_speed = 1.0
-anims/fallingAnim = SubResource( 5 )
-anims/movingAnim = SubResource( 4 )
+anims/fallingAnim = SubResource( 4 )
+anims/movingAnim = SubResource( 5 )
 blend_times = [  ]
+
+[node name="DashTimer" type="Timer" parent="." index="1"]
+
+process_mode = 1
+wait_time = 0.4
+one_shot = true
+autostart = false
 
 [connection signal="body_entered" from="PlayerKinematicBody/PlayerHitbox" to="PlayerKinematicBody" method="_on_PlayerHitbox_body_entered"]
 
@@ -172,5 +178,7 @@ blend_times = [  ]
 [connection signal="timeout" from="PlayerKinematicBody/DamageTimer" to="PlayerKinematicBody" method="_on_DamageTimer_timeout"]
 
 [connection signal="animation_finished" from="PlayerKinematicBody/AnimationPlayer" to="PlayerKinematicBody" method="_on_AnimationPlayer_animation_finished"]
+
+[connection signal="timeout" from="DashTimer" to="PlayerKinematicBody" method="_on_DashTimer_timeout"]
 
 
