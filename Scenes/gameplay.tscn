@@ -44,17 +44,17 @@ transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 [node name="PauseMenuUI" parent="CanvasLayer" index="0" instance=ExtResource( 4 )]
 
 visible = false
-margin_left = 280.0
+margin_left = 249.0
 margin_top = 220.0
-margin_right = 520.0
-margin_bottom = 302.0
+margin_right = 551.0
+margin_bottom = 314.0
 
 [node name="GameOverUI" parent="CanvasLayer" index="1" instance=ExtResource( 5 )]
 
 visible = false
-margin_left = 280.0
+margin_left = 249.0
 margin_top = 220.0
-margin_right = 520.0
-margin_bottom = 260.0
+margin_right = 551.0
+margin_bottom = 280.0
 
 

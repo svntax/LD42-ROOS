@@ -3,6 +3,7 @@ extends Node2D
 var oozePositions
 var newOozePositions
 var oozeColor
+var backgroundColor = Color(69.0 / 255, 40.0 / 255, 60.0 / 255, 1)
 
 func _ready():
     oozePositions = []
@@ -22,5 +23,6 @@ func moveOoze():
             newOozePositions[i] += Vector2(0, (randi() % 4) / 10.0)
 
 func _draw():
+    #draw_rect(Rect2(Vector2(0, 0), Vector2(800, 600)), backgroundColor)
     for i in range(oozePositions.size()):
         draw_line(oozePositions[i], newOozePositions[i], oozeColor, 4)

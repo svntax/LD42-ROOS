@@ -133,6 +133,7 @@ func _on_DamageTimer_timeout():
 func damagePlayer():
     if(falling):
         return
+    SoundHandler.hurtSound.play()
     health -= 1
     if(health <= 0):
         find_node("DamageTimer").stop()

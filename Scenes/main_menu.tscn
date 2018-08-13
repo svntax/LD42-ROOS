@@ -5,7 +5,7 @@
 [ext_resource path="res://Sprites/slimeball01.png" type="Texture" id=3]
 [ext_resource path="res://Scenes/main_menu_ui.tscn" type="PackedScene" id=4]
 
-[node name="MainMenu" type="Node" index="0"]
+[node name="MainMenu" type="Node"]
 
 [node name="TitleLogo" type="Sprite" parent="." index="0"]
 
@@ -57,9 +57,9 @@ texture = ExtResource( 3 )
 [node name="MainMenuUI" parent="." index="2" instance=ExtResource( 4 )]
 
 margin_left = 322.0
-margin_top = 322.0
+margin_top = 382.0
 margin_right = 478.0
-margin_bottom = 392.0
-_sections_unfolded = [ "Pause", "Rect", "Size Flags", "Theme" ]
+margin_bottom = 452.0
+_sections_unfolded = [ "Margin", "Pause", "Rect", "Size Flags", "Theme" ]
 
 

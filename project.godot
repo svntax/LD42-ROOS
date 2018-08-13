@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Globals="*res://Scripts/globals.gd"
+SoundHandler="*res://Scenes/sound_handler.tscn"
 
 [display]
 
@@ -53,5 +54,5 @@ PAUSE=[ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"",
 
 [rendering]
 
-environment/default_clear_color=Color( 0, 0, 0, 1 )
+environment/default_clear_color=Color( 0.270588, 0.156863, 0.235294, 1 )
 environment/default_environment="res://default_env.tres"
