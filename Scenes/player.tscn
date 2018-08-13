@@ -151,7 +151,7 @@ autostart = false
 scale = Vector2( 2, 2 )
 frames = SubResource( 3 )
 animation = "default"
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerKinematicBody" index="5"]
 
@@ -163,6 +163,13 @@ playback_speed = 1.0
 anims/fallingAnim = SubResource( 4 )
 anims/movingAnim = SubResource( 5 )
 blend_times = [  ]
+
+[node name="DamageFlashTimer" type="Timer" parent="PlayerKinematicBody" index="6"]
+
+process_mode = 1
+wait_time = 0.2
+one_shot = false
+autostart = false
 
 [node name="DashTimer" type="Timer" parent="." index="1"]
 
@@ -178,6 +185,8 @@ autostart = false
 [connection signal="timeout" from="PlayerKinematicBody/DamageTimer" to="PlayerKinematicBody" method="_on_DamageTimer_timeout"]
 
 [connection signal="animation_finished" from="PlayerKinematicBody/AnimationPlayer" to="PlayerKinematicBody" method="_on_AnimationPlayer_animation_finished"]
+
+[connection signal="timeout" from="PlayerKinematicBody/DamageFlashTimer" to="PlayerKinematicBody" method="_on_DamageFlashTimer_timeout"]
 
 [connection signal="timeout" from="DashTimer" to="PlayerKinematicBody" method="_on_DashTimer_timeout"]
 

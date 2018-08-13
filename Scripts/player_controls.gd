@@ -125,7 +125,11 @@ func damagePlayer():
     print("Player hurt")
     if(health <= 0):
         find_node("DamageTimer").stop()
+        find_node("DamageFlashTimer").stop()
         self.killPlayer()
+    else:
+        self.set_modulate(Color(1, 0, 0, 1))
+        find_node("DamageFlashTimer").start()
 
 func killPlayer(): #TODO
     self.hide()
@@ -139,3 +143,6 @@ func _on_DashTimer_timeout():
     dashing = false
     self.set_collision_layer_bit(0, true)
     find_node("PlayerHitbox").set_collision_layer_bit(0, true)
+
+func _on_DamageFlashTimer_timeout():
+    self.set_modulate(Color(1, 1, 1, 1))
