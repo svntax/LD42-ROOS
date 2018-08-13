@@ -1,6 +1,7 @@
 extends TileMap
 
 var redSlimeTrail = load("res://Scenes/red_slime_trail.tscn")
+var redSlime = load("res://Scenes/title_enemy.tscn")
 
 var tileMap
 var grid #The 2D array representing the arena
@@ -28,6 +29,14 @@ func _ready():
             tileObjectGrid[x].append([])
             tileObjectGrid[x][y] = null
 
+func _process(delta):
+    if(Input.is_action_just_pressed("THROW_SLIMEBALL") ):
+        var targetPos = get_global_mouse_position()
+        var sb = redSlime.instance()
+        get_parent().add_child(sb)
+        sb.translate(targetPos)
+        sb.set_scale(Vector2(1.5, 1.5))
+
 func placeRedSlimeAt(pos, globalPos, playSound = false):
     #Update the grid array
     var cellX = floor(pos.x / 48)
@@ -44,3 +53,5 @@ func placeRedSlimeAt(pos, globalPos, playSound = false):
         slimeTrail.translate(Vector2(nx, ny) + Vector2(24, 24))
         slimeTrail.set_scale(Vector2(3, 3))
         get_parent().add_child(slimeTrail)
+        if(playSound):
+            SoundHandler.slimeSound02.play()

@@ -52,7 +52,7 @@ func _ready():
     find_node("RedSlimeTimer").start()
 
 func _process(delta):
-    print(str(numFreeTilesLeft) + " / " + str(totalFreeTiles))
+    #print(str(numFreeTilesLeft) + " / " + str(totalFreeTiles))
     if(numFreeTilesLeft <= 0):
         var playerSlimeCount = 0
         for i in range(gridWidth):
@@ -95,6 +95,7 @@ func placeSlimeAt(pos, type, playSound = false):
                     SoundHandler.slimeSound.play()
             elif(type == Globals.RED_SLIME):
                 tileObject.showRedSlime()
+                SoundHandler.slimeSound02.play()
             elif(type == Globals.EMPTY_CELL):
                 tileObject.hideSlime()
     else:
@@ -107,6 +108,7 @@ func placeSlimeAt(pos, type, playSound = false):
                 SoundHandler.slimeSound.play()
         elif(type == Globals.RED_SLIME):
             tempTile.showRedSlime()
+            SoundHandler.slimeSound02.play()
         add_child(tempTile)
         tileObjectGrid[cellX][cellY] = tileObject
 

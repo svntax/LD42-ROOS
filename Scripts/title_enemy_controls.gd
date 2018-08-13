@@ -14,8 +14,8 @@ func _ready():
     titleArena = get_parent().get_parent().find_node("TitleArena")
     animationPlayer = find_node("AnimationPlayer")
     movingSprite = find_node("AnimatedSprite")
-    spawningTransition = false
-    #animationPlayer.play("spawnAnim", 1, 0.75, false)
+    spawningTransition = true
+    animationPlayer.play("spawnAnim", 1, 0.75, false)
     findNextTargetPos()
     find_node("MoveTimer").start()
 
@@ -32,7 +32,7 @@ func _physics_process(delta):
                 animationPlayer.play("movingAnim", 1, animationSpeed, false)
             var cx = floor(self.global_position.x / 48) * (48)
             var cy = floor(self.global_position.y / 48) * (48)
-            titleArena.placeRedSlimeAt(Vector2(cx, cy), self.global_position)
+            titleArena.placeRedSlimeAt(Vector2(cx, cy), self.global_position, true)
         else:
             animationPlayer.stop(true)
             movingSprite.set_frame(0)

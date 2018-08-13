@@ -31,7 +31,7 @@ func _ready():
     movingSprite = find_node("AnimatedSprite")
     playerCamera = find_node("PlayerCamera")
     animationPlayer = find_node("AnimationPlayer")
-    health = 8
+    health = 6
     numEnemies = 0
     falling = false
     dashing = false

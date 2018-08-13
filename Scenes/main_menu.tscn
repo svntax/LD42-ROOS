@@ -22,7 +22,7 @@ _sections_unfolded = [ "Font", "Settings" ]
 
 default_font = SubResource( 1 )
 
-[node name="MainMenu" type="Node" index="0"]
+[node name="MainMenu" type="Node"]
 
 [node name="TitleArena" type="TileMap" parent="." index="0"]
 
@@ -57,19 +57,33 @@ _sections_unfolded = [ "Transform", "Z Index" ]
 
 [node name="EnemyRoot" parent="." index="2" instance=ExtResource( 4 )]
 
-position = Vector2( 218.58, 362.416 )
+position = Vector2( 168.58, 412.416 )
 scale = Vector2( 1.5, 1.5 )
 _sections_unfolded = [ "Transform", "Z Index" ]
 
 [node name="EnemyRoot2" parent="." index="3" instance=ExtResource( 4 )]
 
-position = Vector2( 588.58, 362.416 )
+position = Vector2( 638.58, 412.416 )
 scale = Vector2( 1.5, 1.5 )
 _sections_unfolded = [ "Transform", "Z Index" ]
 
-[node name="SlimeLayer" type="Node2D" parent="." index="4"]
+[node name="EnemyRoot3" parent="." index="4" instance=ExtResource( 4 )]
 
+position = Vector2( 688.58, 202.416 )
+scale = Vector2( 1.5, 1.5 )
+_sections_unfolded = [ "Transform", "Z Index" ]
+
+[node name="EnemyRoot4" parent="." index="5" instance=ExtResource( 4 )]
+
+position = Vector2( 128.58, 192.416 )
+scale = Vector2( 1.5, 1.5 )
+_sections_unfolded = [ "Transform", "Z Index" ]
+
+[node name="SlimeLayer" type="Node2D" parent="." index="6"]
+
+z_index = 3
 script = ExtResource( 5 )
+_sections_unfolded = [ "Z Index" ]
 
 [node name="Sprite" type="Sprite" parent="SlimeLayer" index="0"]
 
@@ -107,7 +121,12 @@ visible = false
 position = Vector2( 349.311, 219.021 )
 texture = ExtResource( 6 )
 
-[node name="MainMenuUI" parent="." index="5" instance=ExtResource( 7 )]
+[node name="BottomUI" type="Node2D" parent="." index="7"]
+
+z_index = 5
+_sections_unfolded = [ "Visibility", "Z Index" ]
+
+[node name="MainMenuUI" parent="BottomUI" index="0" instance=ExtResource( 7 )]
 
 margin_left = 322.0
 margin_top = 382.0
@@ -115,7 +134,7 @@ margin_right = 478.0
 margin_bottom = 452.0
 _sections_unfolded = [ "Margin", "Pause", "Rect", "Size Flags", "Theme" ]
 
-[node name="HighScoreLabel" type="Label" parent="." index="6"]
+[node name="HighScoreLabel" type="Label" parent="BottomUI" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
