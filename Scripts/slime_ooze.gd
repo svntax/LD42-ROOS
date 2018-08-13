@@ -20,7 +20,7 @@ func _process(delta):
 func moveOoze():
     for i in range(oozePositions.size()):
         if(newOozePositions[i].y < 800):
-            newOozePositions[i] += Vector2(0, (randi() % 4) / 10.0)
+            newOozePositions[i] += Vector2(0, (randi() % 4) / 20.0)
 
 func _draw():
     #draw_rect(Rect2(Vector2(0, 0), Vector2(800, 600)), backgroundColor)

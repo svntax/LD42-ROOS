@@ -110,6 +110,7 @@ func _physics_process(delta):
 
 func fallIntoTheVoid():
     self.falling = true
+    find_node("Shadow").hide()
     SoundHandler.fallingSound.play()
     self.animationPlayer.play("fallingAnim", 1, fallingAnimationSpeed, false)
 
@@ -119,8 +120,6 @@ func _on_PlayerHitbox_body_entered(body):
             find_node("DamageTimer").start()
         numEnemies += 1
         damagePlayer()
-    #elif(body.get_name() == "TileMap" and not self.falling):
-        #self.fallIntoTheVoid()
 
 func _on_PlayerFallHitbox_body_entered(body):
    if(body.get_name() == "TileMap" and not self.falling):
@@ -164,7 +163,6 @@ func _on_DashTimer_timeout():
 
 func _on_DamageFlashTimer_timeout():
     self.set_modulate(Color(1, 1, 1, 1))
-
 
 func _on_ShootCooldown_timeout():
     canShoot = true

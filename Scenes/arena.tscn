@@ -125,7 +125,7 @@ autostart = false
 [node name="RedSlimeTimer" type="Timer" parent="." index="6"]
 
 process_mode = 1
-wait_time = 7.0
+wait_time = 6.0
 one_shot = false
 autostart = false
 

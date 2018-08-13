@@ -58,12 +58,12 @@ _sections_unfolded = [ "Angular Velocity", "Color", "Gravity", "Scale" ]
 [sub_resource type="CircleShape2D" id=4]
 
 custom_solver_bias = 0.0
-radius = 10.0
+radius = 9.0
 
 [sub_resource type="CircleShape2D" id=5]
 
 custom_solver_bias = 0.0
-radius = 12.0
+radius = 11.0
 
 [sub_resource type="CircleShape2D" id=6]
 
@@ -128,7 +128,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 1 ]
 }
 
-[node name="PlayerRoot" type="Node2D" groups=[
+[node name="PlayerRoot" type="Node2D" index="0" groups=[
 "players",
 ]]
 

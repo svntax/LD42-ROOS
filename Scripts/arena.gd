@@ -58,9 +58,14 @@ func _process(delta):
         for i in range(gridWidth):
             for j in range(gridHeight):
                 if(grid[i][j] == Globals.PLAYER_SLIME):
-                    playerSlimeCount += 1
-        print("# of tiles slimed: " + str(playerSlimeCount))
-        get_parent().find_node("GameOverUI").showGameOverUI() #TODO
+                    playerSlimeCount += 1.0
+        """print("Player slime count: " + str(playerSlimeCount))
+        print("Total free tiles: " + str(totalFreeTiles))
+        print("Ratio: " + str(playerSlimeCount / totalFreeTiles))
+        print("Percent: " + str((playerSlimeCount / totalFreeTiles) * 100))
+        print("Adjusted percent: " + str(stepify((playerSlimeCount / totalFreeTiles), 0.01) * 100))"""
+        Globals.score = stepify((playerSlimeCount / totalFreeTiles), 0.01) * 100
+        get_parent().find_node("GameOverUI").showGameWinUI()
 
 func checkValidSlimeType(type):
     return type == Globals.EMPTY_CELL or type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
