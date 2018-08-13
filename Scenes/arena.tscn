@@ -122,6 +122,15 @@ wait_time = 7.0
 one_shot = false
 autostart = false
 
+[node name="RedSlimeTimer" type="Timer" parent="." index="6"]
+
+process_mode = 1
+wait_time = 7.0
+one_shot = false
+autostart = false
+
 [connection signal="timeout" from="DropTileTimer" to="." method="_on_DropTileTimer_timeout"]
+
+[connection signal="timeout" from="RedSlimeTimer" to="." method="_on_RedSlimeTimer_timeout"]
 
 

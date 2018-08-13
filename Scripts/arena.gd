@@ -1,6 +1,7 @@
 extends Node2D
 
 var groundTile = load("res://Scenes/ground_tile.tscn")
+var redSlime = load("res://Scenes/enemy.tscn")
 
 var tileMap
 var grid #The 2D array representing the arena
@@ -8,10 +9,14 @@ var tileObjectGrid
 var gridWidth
 var gridHeight
 var nextTilePos
+var numFreeTilesLeft
+var totalFreeTiles
 
 func _ready():
     tileMap = find_node("TileMap")
     nextTilePos = null
+    numFreeTilesLeft = 0
+    totalFreeTiles = 0
     grid = []
     gridWidth = tileMap.get_used_rect().size.x
     gridHeight = tileMap.get_used_rect().size.y
@@ -37,9 +42,23 @@ func _ready():
                 tempTile.set_scale(Vector2(2, 2))
                 add_child(tempTile)
                 tileObjectGrid[x][y] = tempTile
+                numFreeTilesLeft += 1
+                totalFreeTiles += 1
             #tileObjectGrid[x][y] = null
     getNextTileToDrop()
     find_node("DropTileTimer").start()
+    #find_node("RedSlimeTimer").start()
+
+func _process(delta):
+    print(str(numFreeTilesLeft) + " / " + str(totalFreeTiles))
+    if(numFreeTilesLeft <= 0):
+        var playerSlimeCount = 0
+        for i in range(gridWidth):
+            for j in range(gridHeight):
+                if(grid[i][j] == Globals.PLAYER_SLIME):
+                    playerSlimeCount += 1
+        print("# of tiles slimed: " + str(playerSlimeCount))
+        get_parent().find_node("GameOverUI").showGameOverUI() #TODO
 
 func checkValidSlimeType(type):
     return type == Globals.EMPTY_CELL or type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
@@ -108,6 +127,9 @@ func meltTileAt(cellPos):
         return
     if(tileMap.get_cell(cellPos.x, cellPos.y) <= 0):
         tileMap.set_cell(cellPos.x, cellPos.y, 3)
+        var tileObject = tileObjectGrid[cellPos.x][cellPos.y]
+        if(tileObject != null and not tileObject.isSlimed and grid[cellPos.x][cellPos.y] == Globals.EMPTY_CELL):
+            numFreeTilesLeft -= 1
 
 func addTileObjectAt(cellPos):
     var tileObject = groundTile.instance()
@@ -131,9 +153,27 @@ func getNextTileToDrop():
     else:
         print("No more empty cells")
 
+func spawnRedSlime():
+    var tilePositions = []
+    for x in range(gridWidth):
+        for y in range(gridHeight):
+            if(grid[x][y] != Globals.PLAYER_SLIME):
+                tilePositions.append(Vector2(x, y))
+    if(tilePositions.size() > 0):
+        var posIndex = randi() % tilePositions.size()
+        nextTilePos = tilePositions[posIndex]
+        var slime = redSlime.instance()
+        get_parent().add_child(slime)
+        slime.translate(nextTilePos * Globals.TILE_SIZE)
+    else:
+        print("All tiles are blue slime")
+
 func _on_DropTileTimer_timeout():
     #placeSlimeAt(Vector2(4, 4) * Globals.TILE_SIZE, Globals.EMPTY_CELL)
     placeSlimeAt(nextTilePos * Globals.TILE_SIZE, Globals.EMPTY_CELL)
     meltPlayerTiles(nextTilePos, 0.4)
     getNextTileToDrop()
     #find_node("DropTileTimer").start()
+
+func _on_RedSlimeTimer_timeout():
+    spawnRedSlime()

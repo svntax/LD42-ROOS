@@ -8,6 +8,7 @@ var initialDelay
 var lineSource
 var lineDirection
 var lineAmount
+var isSlimed
 
 var arena
 
@@ -19,14 +20,21 @@ func _ready():
     lineSource = null
     lineDirection = null
     lineAmount = -1
+    isSlimed = false
 
 func showPlayerSlime():
     get_node("PlayerSlime").show()
     get_node("RedSlime").hide()
+    if(not isSlimed):
+        isSlimed = true
+        arena.numFreeTilesLeft -= 1
 
 func showRedSlime():
     get_node("PlayerSlime").hide()
     get_node("RedSlime").show()
+    if(not isSlimed):
+        isSlimed = true
+        arena.numFreeTilesLeft -= 1
 
 func hideSlime():
     get_node("PlayerSlime").hide()
@@ -50,11 +58,12 @@ func isMelting():
     return melting
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-    arena.meltPlayerTiles(bfsSource + Vector2(0, 1), initialDelay)
-    arena.meltPlayerTiles(bfsSource + Vector2(0, -1), initialDelay)
-    arena.meltPlayerTiles(bfsSource + Vector2(1, 0), initialDelay)
-    arena.meltPlayerTiles(bfsSource + Vector2(-1, 0), initialDelay)
-    self.hide()
+    if(anim_name == "destroyAnim"):
+        arena.meltPlayerTiles(bfsSource + Vector2(0, 1), initialDelay)
+        arena.meltPlayerTiles(bfsSource + Vector2(0, -1), initialDelay)
+        arena.meltPlayerTiles(bfsSource + Vector2(1, 0), initialDelay)
+        arena.meltPlayerTiles(bfsSource + Vector2(-1, 0), initialDelay)
+        self.hide()
 
 func shootPlayerSlime(cellPos, direction, amount):
     if(amount <= 0):
