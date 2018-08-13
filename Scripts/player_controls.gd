@@ -20,6 +20,7 @@ var health
 var numEnemies
 var falling
 var dashing
+var canShoot
 var directionFacing
 
 var arena
@@ -33,6 +34,7 @@ func _ready():
     numEnemies = 0
     falling = false
     dashing = false
+    canShoot = true
     directionFacing = Vector2(1, 0)
 
 func _process(delta):
@@ -41,12 +43,12 @@ func _process(delta):
             var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
             var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
             arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
-    if(not falling and Input.is_action_just_pressed("MELT_TILE")):
+    if(not falling and Input.is_action_just_pressed("MELT_TILE")): #TODO disable
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
             arena.meltPlayerTiles(Vector2(cellX, cellY), meltSpeed)
-    if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")):
+    if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")): #TODO disable
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
@@ -54,8 +56,10 @@ func _process(delta):
             if(tileObject == null):
                 tileObject = arena.addTileObjectAt(Vector2(cellX, cellY))
             tileObject.shootPlayerSlime(Vector2(cellX, cellY), self.directionFacing, slimeLineLength)
-    if(not falling and Input.is_action_just_pressed("THROW_SLIMEBALL")):
+    if(not falling and Input.is_action_just_pressed("THROW_SLIMEBALL") and canShoot):
         if(arena != null):
+            canShoot = false
+            find_node("ShootCooldown").start()
             var targetPos = get_global_mouse_position()
             var targetDir = targetPos - self.global_position
             var sb = slimeball.instance()
@@ -149,3 +153,7 @@ func _on_DashTimer_timeout():
 
 func _on_DamageFlashTimer_timeout():
     self.set_modulate(Color(1, 1, 1, 1))
+
+
+func _on_ShootCooldown_timeout():
+    canShoot = true
