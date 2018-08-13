@@ -66,7 +66,7 @@ func _process(delta):
     if(not falling and not dashing and Input.is_action_just_pressed("DASH")):
         dashing = true
         self.set_collision_layer_bit(0, false)
-        find_node("PlayerHitbox").set_collision_layer_bit(0, false)
+        find_node("PlayerFallHitbox").set_collision_layer_bit(0, false)
         get_parent().find_node("DashTimer").start()
 
 func _physics_process(delta):
@@ -106,7 +106,11 @@ func _on_PlayerHitbox_body_entered(body):
             find_node("DamageTimer").start()
         numEnemies += 1
         damagePlayer()
-    elif(body.get_name() == "TileMap" and not self.falling):
+    #elif(body.get_name() == "TileMap" and not self.falling):
+        #self.fallIntoTheVoid()
+
+func _on_PlayerFallHitbox_body_entered(body):
+   if(body.get_name() == "TileMap" and not self.falling):
         self.fallIntoTheVoid()
 
 func _on_PlayerHitbox_body_exited(body):
@@ -122,7 +126,6 @@ func damagePlayer():
     if(falling):
         return
     health -= 1
-    print("Player hurt")
     if(health <= 0):
         find_node("DamageTimer").stop()
         find_node("DamageFlashTimer").stop()
@@ -131,9 +134,9 @@ func damagePlayer():
         self.set_modulate(Color(1, 0, 0, 1))
         find_node("DamageFlashTimer").start()
 
-func killPlayer(): #TODO
+func killPlayer():
     self.hide()
-    print("Game over")
+    get_parent().get_parent().find_node("GameOverUI").showGameOverUI()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
     if(anim_name == "fallingAnim"):
@@ -142,7 +145,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 func _on_DashTimer_timeout():
     dashing = false
     self.set_collision_layer_bit(0, true)
-    find_node("PlayerHitbox").set_collision_layer_bit(0, true)
+    find_node("PlayerFallHitbox").set_collision_layer_bit(0, true)
 
 func _on_DamageFlashTimer_timeout():
     self.set_modulate(Color(1, 1, 1, 1))

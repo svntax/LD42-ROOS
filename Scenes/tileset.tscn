@@ -18,9 +18,9 @@ extents = Vector2( 8, 8 )
 [sub_resource type="RectangleShape2D" id=3]
 
 custom_solver_bias = 0.0
-extents = Vector2( 3, 3 )
+extents = Vector2( 2, 2 )
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" index="0"]
 
 [node name="Ground00" type="Sprite" parent="." index="0"]
 

@@ -7,5 +7,7 @@ var PLAYER_SLIME = 1
 var RED_SLIME = 2
 var VOID_CELL = 3
 
+var gameOver
+
 func _ready():
-    pass
+    gameOver = false
