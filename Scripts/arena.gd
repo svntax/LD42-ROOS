@@ -9,12 +9,14 @@ var tileObjectGrid
 var gridWidth
 var gridHeight
 var nextTilePos
+var nextRedSlimePos
 var numFreeTilesLeft
 var totalFreeTiles
 
 func _ready():
     tileMap = find_node("TileMap")
     nextTilePos = null
+    nextRedSlimePos = null
     numFreeTilesLeft = 0
     totalFreeTiles = 0
     grid = []
@@ -47,7 +49,7 @@ func _ready():
             #tileObjectGrid[x][y] = null
     getNextTileToDrop()
     find_node("DropTileTimer").start()
-    #find_node("RedSlimeTimer").start()
+    find_node("RedSlimeTimer").start()
 
 func _process(delta):
     print(str(numFreeTilesLeft) + " / " + str(totalFreeTiles))
@@ -157,14 +159,16 @@ func spawnRedSlime():
     var tilePositions = []
     for x in range(gridWidth):
         for y in range(gridHeight):
-            if(grid[x][y] != Globals.PLAYER_SLIME):
-                tilePositions.append(Vector2(x, y))
+            if(grid[x][y] == Globals.EMPTY_CELL or grid[x][y] == Globals.RED_SLIME):
+                var tileObject = tileObjectGrid[x][y]
+                if(tileObject != null and tileMap.get_cell(x, y) == 0):
+                    tilePositions.append(Vector2(x, y))
     if(tilePositions.size() > 0):
         var posIndex = randi() % tilePositions.size()
-        nextTilePos = tilePositions[posIndex]
+        nextRedSlimePos = tilePositions[posIndex]
         var slime = redSlime.instance()
         get_parent().add_child(slime)
-        slime.translate(nextTilePos * Globals.TILE_SIZE)
+        slime.translate(nextRedSlimePos * Globals.TILE_SIZE)
     else:
         print("All tiles are blue slime")
 
@@ -173,7 +177,6 @@ func _on_DropTileTimer_timeout():
     placeSlimeAt(nextTilePos * Globals.TILE_SIZE, Globals.EMPTY_CELL)
     meltPlayerTiles(nextTilePos, 0.4)
     getNextTileToDrop()
-    #find_node("DropTileTimer").start()
 
 func _on_RedSlimeTimer_timeout():
     spawnRedSlime()

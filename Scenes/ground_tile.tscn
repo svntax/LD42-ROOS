@@ -65,7 +65,7 @@ tracks/0/keys = {
 "values": [ Vector2( -1, 0 ), Vector2( 1, 0 ), Vector2( 0, -1 ), Vector2( 0, 1 ), Vector2( 0, 0 ) ]
 }
 
-[node name="GroundTile" type="Node2D" index="0"]
+[node name="GroundTile" type="Node2D"]
 
 position = Vector2( 0.214645, -0.214638 )
 script = ExtResource( 1 )
