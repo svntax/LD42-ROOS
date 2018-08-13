@@ -199,6 +199,13 @@ wait_time = 0.8
 one_shot = true
 autostart = false
 
+[node name="DashCooldown" type="Timer" parent="PlayerKinematicBody" index="9"]
+
+process_mode = 1
+wait_time = 0.8
+one_shot = true
+autostart = false
+
 [node name="DashTimer" type="Timer" parent="." index="1"]
 
 process_mode = 1
@@ -219,6 +226,8 @@ autostart = false
 [connection signal="timeout" from="PlayerKinematicBody/DamageFlashTimer" to="PlayerKinematicBody" method="_on_DamageFlashTimer_timeout"]
 
 [connection signal="timeout" from="PlayerKinematicBody/ShootCooldown" to="PlayerKinematicBody" method="_on_ShootCooldown_timeout"]
+
+[connection signal="timeout" from="PlayerKinematicBody/DashCooldown" to="PlayerKinematicBody" method="_on_DashCooldown_timeout"]
 
 [connection signal="timeout" from="DashTimer" to="PlayerKinematicBody" method="_on_DashTimer_timeout"]
 

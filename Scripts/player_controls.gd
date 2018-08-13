@@ -21,6 +21,7 @@ var numEnemies
 var falling
 var dashing
 var canShoot
+var canDash
 var directionFacing
 
 var arena
@@ -35,6 +36,7 @@ func _ready():
     falling = false
     dashing = false
     canShoot = true
+    canDash = true
     directionFacing = Vector2(1, 0)
 
 func _process(delta):
@@ -67,8 +69,10 @@ func _process(delta):
             sb.translate(self.position)
             sb.set_scale(Vector2(1.5, 1.5))
             sb.throwSlimeball(targetDir)
-    if(not falling and not dashing and Input.is_action_just_pressed("DASH")):
+    if(not falling and not dashing and Input.is_action_just_pressed("DASH") and canDash):
         dashing = true
+        canDash = false
+        find_node("DashCooldown").start()
         self.set_collision_layer_bit(0, false)
         find_node("PlayerFallHitbox").set_collision_layer_bit(0, false)
         get_parent().find_node("DashTimer").start()
@@ -157,3 +161,6 @@ func _on_DamageFlashTimer_timeout():
 
 func _on_ShootCooldown_timeout():
     canShoot = true
+
+func _on_DashCooldown_timeout():
+    canDash = true
