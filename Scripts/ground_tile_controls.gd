@@ -34,6 +34,8 @@ func hideSlime():
 
 func _on_MeltTimer_timeout():
     find_node("AnimationPlayer").play("destroyAnim")
+    if(not SoundHandler.fallingSound02.playing):
+        SoundHandler.fallingSound02.play()
     arena.meltTileAt(bfsSource)
 
 func startMelting(delay, sourceCellPos):

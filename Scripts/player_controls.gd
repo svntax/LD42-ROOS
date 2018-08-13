@@ -44,23 +44,24 @@ func _process(delta):
         if(arena != null):
             var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
             var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
-            arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
+            arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME, true)
     """if(not falling and Input.is_action_just_pressed("MELT_TILE")):
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
             arena.meltPlayerTiles(Vector2(cellX, cellY), meltSpeed)"""
-    if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")): #TODO disable
+    """if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")):
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
             var tileObject = arena.tileObjectGrid[cellX][cellY]
             if(tileObject == null):
                 tileObject = arena.addTileObjectAt(Vector2(cellX, cellY))
-            tileObject.shootPlayerSlime(Vector2(cellX, cellY), self.directionFacing, slimeLineLength)
+            tileObject.shootPlayerSlime(Vector2(cellX, cellY), self.directionFacing, slimeLineLength)"""
     if(not falling and Input.is_action_just_pressed("THROW_SLIMEBALL") and canShoot):
         if(arena != null):
             canShoot = false
+            SoundHandler.shootSound.play()
             find_node("ShootCooldown").start()
             var targetPos = get_global_mouse_position()
             var targetDir = targetPos - self.global_position
@@ -88,7 +89,7 @@ func _physics_process(delta):
             self.move_and_slide(directionFacing.normalized() * dashSpeed)
             var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
             var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
-            arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
+            arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME, true)
         else:
             if(Input.is_action_pressed("MOVE_LEFT")):
                 walkVel.x = -WALK_SPEED
@@ -109,6 +110,7 @@ func _physics_process(delta):
 
 func fallIntoTheVoid():
     self.falling = true
+    SoundHandler.fallingSound.play()
     self.animationPlayer.play("fallingAnim", 1, fallingAnimationSpeed, false)
 
 func _on_PlayerHitbox_body_entered(body):

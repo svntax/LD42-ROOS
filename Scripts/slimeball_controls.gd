@@ -22,6 +22,7 @@ func _physics_process(delta):
 
 func hitGround():
     moveVel = Vector2(0, 0)
+    SoundHandler.splashSound.play()
     var cx = floor(self.global_position.x / Globals.TILE_SIZE)
     var cy = floor(self.global_position.y / Globals.TILE_SIZE)
     for i in range(-1, 2):

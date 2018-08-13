@@ -44,7 +44,7 @@ func _ready():
 func checkValidSlimeType(type):
     return type == Globals.EMPTY_CELL or type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
 
-func placeSlimeAt(pos, type):
+func placeSlimeAt(pos, type, playSound = false):
     if(not checkValidSlimeType(type)):
         print("ERROR: Invalid slime type")
         return
@@ -62,18 +62,23 @@ func placeSlimeAt(pos, type):
     #Else instantiate a new tile object
     var tileObject = tileObjectGrid[cellX][cellY]
     if(tileObject != null):
-        if(type == Globals.PLAYER_SLIME):
-            tileObject.showPlayerSlime()
-        elif(type == Globals.RED_SLIME):
-            tileObject.showRedSlime()
-        elif(type == Globals.EMPTY_CELL):
-            tileObject.hideSlime()
+        if(tileObject.is_visible()):
+            if(type == Globals.PLAYER_SLIME):
+                tileObject.showPlayerSlime()
+                if(playSound):
+                    SoundHandler.slimeSound.play()
+            elif(type == Globals.RED_SLIME):
+                tileObject.showRedSlime()
+            elif(type == Globals.EMPTY_CELL):
+                tileObject.hideSlime()
     else:
         var tempTile = groundTile.instance()
         tempTile.translate(pos + Vector2(16, 16))
         tempTile.set_scale(Vector2(2, 2))
         if(type == Globals.PLAYER_SLIME):
             tempTile.showPlayerSlime()
+            if(playSound):
+                SoundHandler.slimeSound.play()
         elif(type == Globals.RED_SLIME):
             tempTile.showRedSlime()
         add_child(tempTile)
