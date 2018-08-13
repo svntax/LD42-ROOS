@@ -76,6 +76,9 @@ func _process(delta):
         self.set_collision_layer_bit(0, false)
         find_node("PlayerFallHitbox").set_collision_layer_bit(0, false)
         get_parent().find_node("DashTimer").start()
+        animationPlayer.stop()
+        movingSprite.set_frame(1)
+        find_node("Trail").set_emitting(true)
 
 func _physics_process(delta):
     walkVel.x = 0
@@ -153,6 +156,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _on_DashTimer_timeout():
     dashing = false
+    find_node("Trail").set_emitting(false)
     self.set_collision_layer_bit(0, true)
     find_node("PlayerFallHitbox").set_collision_layer_bit(0, true)
 

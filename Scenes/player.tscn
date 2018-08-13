@@ -1,9 +1,59 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scripts/player_controls.gd" type="Script" id=1]
-[ext_resource path="res://Sprites/slime_r01.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/slime_r02.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/slime_r02.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/slime_r01.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/slime_r03.png" type="Texture" id=4]
+
+[sub_resource type="Gradient" id=7]
+
+offsets = PoolRealArray( 0, 0.00591716 )
+colors = PoolColorArray( 0.501961, 0.501961, 0.501961, 1, 0.25098, 0.25098, 0.25098, 0.501961 )
+
+[sub_resource type="GradientTexture" id=8]
+
+flags = 4
+gradient = SubResource( 7 )
+width = 2048
+
+[sub_resource type="ParticlesMaterial" id=9]
+
+render_priority = 0
+trail_divisor = 1
+emission_shape = 0
+flag_align_y = false
+flag_rotate_y = false
+flag_disable_z = true
+spread = 45.0
+flatness = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 1.0
+initial_velocity_random = 0.0
+angular_velocity = 0.0
+angular_velocity_random = 0.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 0.0
+linear_accel_random = 0.0
+radial_accel = 0.0
+radial_accel_random = 0.0
+tangential_accel = 0.0
+tangential_accel_random = 0.0
+damping = 0.0
+damping_random = 0.0
+angle = 0.0
+angle_random = 0.0
+scale = 2.0
+scale_random = 0.0
+color_ramp = SubResource( 8 )
+hue_variation = 0.0
+hue_variation_random = 0.0
+anim_speed = 0.0
+anim_speed_random = 0.0
+anim_offset = 0.0
+anim_offset_random = 0.0
+anim_loop = false
+_sections_unfolded = [ "Angular Velocity", "Color", "Gravity", "Scale" ]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -23,7 +73,7 @@ radius = 16.0
 [sub_resource type="SpriteFrames" id=4]
 
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 2 ), ExtResource( 4 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
@@ -78,7 +128,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 1 ]
 }
 
-[node name="PlayerRoot" type="Node2D" groups=[
+[node name="PlayerRoot" type="Node2D" index="0" groups=[
 "players",
 ]]
 
@@ -95,12 +145,34 @@ script = ExtResource( 1 )
 _sections_unfolded = [ "Angular", "Collision", "Linear", "collision" ]
 WALK_SPEED = 96
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerKinematicBody" index="0"]
+[node name="Trail" type="Particles2D" parent="PlayerKinematicBody" index="0"]
+
+emitting = false
+amount = 6
+lifetime = 0.6
+one_shot = false
+preprocess = 0.0
+speed_scale = 2.0
+explosiveness = 0.0
+randomness = 0.0
+fixed_fps = 0
+fract_delta = true
+visibility_rect = Rect2( -100, -100, 200, 200 )
+local_coords = false
+draw_order = 1
+process_material = SubResource( 9 )
+texture = ExtResource( 2 )
+normal_map = null
+h_frames = 1
+v_frames = 1
+_sections_unfolded = [ "Drawing", "Process Material", "Textures", "Time", "Transform" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerKinematicBody" index="1"]
 
 position = Vector2( 0, 2 )
 shape = SubResource( 1 )
 
-[node name="PlayerCamera" type="Camera2D" parent="PlayerKinematicBody" index="1"]
+[node name="PlayerCamera" type="Camera2D" parent="PlayerKinematicBody" index="2"]
 
 anchor_mode = 1
 rotating = false
@@ -126,7 +198,7 @@ editor_draw_limits = false
 editor_draw_drag_margin = false
 _sections_unfolded = [ "Limit" ]
 
-[node name="PlayerFallHitbox" type="Area2D" parent="PlayerKinematicBody" index="2"]
+[node name="PlayerFallHitbox" type="Area2D" parent="PlayerKinematicBody" index="3"]
 
 position = Vector2( 0, 1 )
 input_pickable = true
@@ -143,7 +215,7 @@ _sections_unfolded = [ "Collision" ]
 
 shape = SubResource( 2 )
 
-[node name="PlayerHitbox" type="Area2D" parent="PlayerKinematicBody" index="3"]
+[node name="PlayerHitbox" type="Area2D" parent="PlayerKinematicBody" index="4"]
 
 position = Vector2( 0, 2 )
 input_pickable = true
@@ -160,21 +232,21 @@ _sections_unfolded = [ "Collision" ]
 
 shape = SubResource( 3 )
 
-[node name="DamageTimer" type="Timer" parent="PlayerKinematicBody" index="4"]
+[node name="DamageTimer" type="Timer" parent="PlayerKinematicBody" index="5"]
 
 process_mode = 1
 wait_time = 1.0
 one_shot = false
 autostart = false
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="PlayerKinematicBody" index="5"]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="PlayerKinematicBody" index="6"]
 
 scale = Vector2( 2, 2 )
 frames = SubResource( 4 )
 animation = "default"
 _sections_unfolded = [ "Transform", "Visibility" ]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerKinematicBody" index="6"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerKinematicBody" index="7"]
 
 root_node = NodePath("..")
 autoplay = ""
@@ -185,21 +257,21 @@ anims/fallingAnim = SubResource( 5 )
 anims/movingAnim = SubResource( 6 )
 blend_times = [  ]
 
-[node name="DamageFlashTimer" type="Timer" parent="PlayerKinematicBody" index="7"]
+[node name="DamageFlashTimer" type="Timer" parent="PlayerKinematicBody" index="8"]
 
 process_mode = 1
 wait_time = 0.2
 one_shot = false
 autostart = false
 
-[node name="ShootCooldown" type="Timer" parent="PlayerKinematicBody" index="8"]
+[node name="ShootCooldown" type="Timer" parent="PlayerKinematicBody" index="9"]
 
 process_mode = 1
 wait_time = 0.8
 one_shot = true
 autostart = false
 
-[node name="DashCooldown" type="Timer" parent="PlayerKinematicBody" index="9"]
+[node name="DashCooldown" type="Timer" parent="PlayerKinematicBody" index="10"]
 
 process_mode = 1
 wait_time = 0.8
