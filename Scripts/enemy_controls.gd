@@ -37,4 +37,4 @@ func _physics_process(delta):
         movingSprite.set_frame(0)
 
 func killSlime():
-    self.queue_free()
+    get_parent().queue_free()

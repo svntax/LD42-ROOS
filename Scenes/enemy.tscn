@@ -38,7 +38,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 1 ]
 }
 
-[node name="EnemyRoot" type="Node2D"]
+[node name="EnemyRoot" type="Node2D" index="0"]
 
 z_index = 2
 _sections_unfolded = [ "Z Index" ]

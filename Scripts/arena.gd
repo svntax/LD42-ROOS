@@ -7,9 +7,11 @@ var grid #The 2D array representing the arena
 var tileObjectGrid
 var gridWidth
 var gridHeight
+var nextTilePos
 
 func _ready():
     tileMap = find_node("TileMap")
+    nextTilePos = null
     grid = []
     gridWidth = tileMap.get_used_rect().size.x
     gridHeight = tileMap.get_used_rect().size.y
@@ -36,10 +38,11 @@ func _ready():
                 add_child(tempTile)
                 tileObjectGrid[x][y] = tempTile
             #tileObjectGrid[x][y] = null
-            
+    getNextTileToDrop()
+    find_node("DropTileTimer").start()
 
 func checkValidSlimeType(type):
-    return type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
+    return type == Globals.EMPTY_CELL or type == Globals.PLAYER_SLIME or type == Globals.RED_SLIME
 
 func placeSlimeAt(pos, type):
     if(not checkValidSlimeType(type)):
@@ -63,6 +66,8 @@ func placeSlimeAt(pos, type):
             tileObject.showPlayerSlime()
         elif(type == Globals.RED_SLIME):
             tileObject.showRedSlime()
+        elif(type == Globals.EMPTY_CELL):
+            tileObject.hideSlime()
     else:
         var tempTile = groundTile.instance()
         tempTile.translate(pos + Vector2(16, 16))
@@ -106,3 +111,24 @@ func addTileObjectAt(cellPos):
     add_child(tileObject)
     tileObjectGrid[cellPos.x][cellPos.y] = tileObject
     return tileObject
+
+func getNextTileToDrop():
+    var tilePositions = []
+    for x in range(gridWidth):
+        for y in range(gridHeight):
+            if(grid[x][y] == Globals.EMPTY_CELL):
+                tilePositions.append(Vector2(x, y))
+    if(tilePositions.size() > 0):
+        var posIndex = randi() % tilePositions.size()
+        nextTilePos = tilePositions[posIndex]
+        var tileObj = tileObjectGrid[nextTilePos.x][nextTilePos.y]
+        tileObj.find_node("AnimationPlayer").play("shakeAnim")
+    else:
+        print("No more empty cells")
+
+func _on_DropTileTimer_timeout():
+    #placeSlimeAt(Vector2(4, 4) * Globals.TILE_SIZE, Globals.EMPTY_CELL)
+    placeSlimeAt(nextTilePos * Globals.TILE_SIZE, Globals.EMPTY_CELL)
+    meltPlayerTiles(nextTilePos, 0.4)
+    getNextTileToDrop()
+    #find_node("DropTileTimer").start()

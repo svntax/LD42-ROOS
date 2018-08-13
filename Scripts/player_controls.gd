@@ -45,11 +45,11 @@ func _process(delta):
             var cx = floor(self.global_position.x / Globals.TILE_SIZE) * Globals.TILE_SIZE
             var cy = floor(self.global_position.y / Globals.TILE_SIZE) * Globals.TILE_SIZE
             arena.placeSlimeAt(Vector2(cx, cy), Globals.PLAYER_SLIME)
-    if(not falling and Input.is_action_just_pressed("MELT_TILE")): #TODO disable
+    """if(not falling and Input.is_action_just_pressed("MELT_TILE")):
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)
             var cellY = floor(self.global_position.y / Globals.TILE_SIZE)
-            arena.meltPlayerTiles(Vector2(cellX, cellY), meltSpeed)
+            arena.meltPlayerTiles(Vector2(cellX, cellY), meltSpeed)"""
     if(not falling and Input.is_action_just_pressed("SHOOT_SLIME")): #TODO disable
         if(arena != null):
             var cellX = floor(self.global_position.x / Globals.TILE_SIZE)

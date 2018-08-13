@@ -28,12 +28,17 @@ func showRedSlime():
     get_node("PlayerSlime").hide()
     get_node("RedSlime").show()
 
+func hideSlime():
+    get_node("PlayerSlime").hide()
+    get_node("RedSlime").hide()
+
 func _on_MeltTimer_timeout():
     find_node("AnimationPlayer").play("destroyAnim")
     arena.meltTileAt(bfsSource)
 
 func startMelting(delay, sourceCellPos):
     melting = true
+    find_node("AnimationPlayer").play("shakeAnim", -1, 2)
     initialDelay = delay
     find_node("MeltTimer").set_wait_time(delay)
     find_node("MeltTimer").start()
